@@ -19,8 +19,6 @@ from youbot_interface.msg import Floats
 running=True
 deltaTime = 50./1000
 
-reached=False
-
 previousForwBackVel=0
 previousLeftRightVel=0
 previousRotVel=0
@@ -31,6 +29,8 @@ accumRot=0
 
 currentPose=np.array([0,0,0])
 target=np.array([1,0,1])
+
+r=0.02375*2
 
 def exit_gracefully(signum, frame):
 
@@ -55,12 +55,9 @@ def exit_gracefully(signum, frame):
 	# restore the exit gracefully handler here	
 	signal.signal(signal.SIGINT, exit_gracefully)
 def targetCallback(msg):
-	global target, reached
+	global target, reached, currentPose
 	
-	target=np.array([0.,0.,0.])
 	target=msg.array
-
-	reached=False
 
 def odomCallback(odom):
 
@@ -87,17 +84,23 @@ def controlWheels():
 
 	relativePose=target-currentPose
 
-	KpP=15
+	KpP=20
 	KpT=20
 
 	maxV=2
 	maxVRot=3
 	accelF=0.035
 
+	theta=currentPose[2]
 	relativePose=target-currentPose
+	relativePose[0:2]=np.array([relativePose[0]*cos(theta)+relativePose[1]*sin(theta), relativePose[0]*sin(theta)+relativePose[1]*-cos(theta)])
 
-	forwBackVel=relativePose[1]*KpP
-	leftRightVel=relativePose[0]*KpP
+	if(np.linalg.norm(relativePose)<5e-2):
+		pubWheel.publish(np.array([0,0,0,0]))
+		return
+	
+	forwBackVel=relativePose[0]*KpP
+	leftRightVel=relativePose[1]*KpP
 
 	v=np.sqrt(forwBackVel**2+leftRightVel**2)
 	if(math.isnan(v) or math.isnan(relativePose[2])):
@@ -133,9 +136,6 @@ def controlWheels():
 	previousForwBackVel=forwBackVel
 	previousLeftRightVel=leftRightVel
 	previousRotVel=rotVel
-
-	if(np.linalg.norm(relativePose)<5e-2):
-		pubWheel.publish(np.array([0,0,0,0]))
 def main():
 	global reached, pubWheel
 
@@ -149,8 +149,7 @@ def main():
 
 	r = rospy.Rate(100)
 	while(running):
-		if(not reached):
-			controlWheels()
+		controlWheels()
 		r.sleep()
 if __name__=="__main__":
 	main()
