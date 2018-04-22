@@ -95,4 +95,4 @@ def forward_kinematics(q1, q2, q3, q4, q5, x, y, theta):
 	return tipPos_world
 
 
-print(forward_kinematics(0, 0, 0, 0, 0, 0, 0, 0))
+print(forward_kinematics(0, 0, 0, 0, 0, 0, 0, 0))   #simple test example, should output: [-140.5, 0, 655]
