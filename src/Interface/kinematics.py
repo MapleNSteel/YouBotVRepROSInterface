@@ -1,7 +1,4 @@
 import numpy as np
-from sympy import *
-
-
 
 a = 10   #not too sure about this 
 b = 72
@@ -37,36 +34,3 @@ def combined_kinematics(q1, q2, q3, q4, q5, q1d, q2d, q3d, q4d, q5d, q6d, fx, fy
 	combined_Torque = np.matrix([[mz + 0.5*fy*g*cos(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) + 0.5*fy*g*cos(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) + 0.5*fy*h*cos(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) + 0.5*fy*h*cos(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) - 0.5*fx*g*sin(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) + 0.5*fx*g*sin(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) - 0.5*fx*h*sin(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) + 0.5*fx*h*sin(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) + 0.5*f*fx*cos(q1 + q2 + q3 - 1.0*theta) - 0.5*f*fx*cos(q2 - 1.0*q1 + q3 + theta) + 1.28e-12*f*fy*cos(q1 + q2 + q3 - 1.0*theta) + 1.28e-12*f*fy*cos(q2 - 1.0*q1 + q3 + theta) - 1.28e-12*f*fx*sin(q1 + q2 + q3 - 1.0*theta) + 1.28e-12*f*fx*sin(q2 - 1.0*q1 + q3 + theta) + 0.5*f*fy*sin(q1 + q2 + q3 - 1.0*theta) + 0.5*f*fy*sin(q2 - 1.0*q1 + q3 + theta) + a*fy*cos(q1 - 1.0*theta) - 6.12e-17*fx*h*cos(q1 - 1.0*theta) - 1.0*a*fx*sin(q1 - 1.0*theta) - 6.12e-17*fy*h*sin(q1 - 1.0*theta) + 0.5*e*fx*cos(q1 + q2 - 1.0*theta) - 0.5*e*fx*cos(q2 - 1.0*q1 + theta) + 1.28e-12*e*fy*cos(q1 + q2 - 1.0*theta) + 1.28e-12*e*fy*cos(q2 - 1.0*q1 + theta) - 1.28e-12*e*fx*sin(q1 + q2 - 1.0*theta) + 1.28e-12*e*fx*sin(q2 - 1.0*q1 + theta) + 0.5*e*fy*sin(q1 + q2 - 1.0*theta) + 0.5*e*fy*sin(q2 - 1.0*q1 + theta)], [6.12e-17*mz + my*cos(q1 - 1.0*theta) - 1.0*mx*sin(q1 - 1.0*theta) - 1.0*e*fz*sin(q2) + 0.5*fy*g*cos(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) - 0.5*fy*g*cos(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) + 0.5*fy*h*cos(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) - 0.5*fy*h*cos(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) - 0.5*fx*g*sin(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) - 0.5*fx*g*sin(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) - 0.5*fx*h*sin(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) - 0.5*fx*h*sin(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) - 2.56e-12*fz*g*cos(q2 + q3 + q4) - 2.56e-12*fz*h*cos(q2 + q3 + q4) - 1.0*fz*g*sin(q2 + q3 + q4) - 1.0*fz*h*sin(q2 + q3 + q4) + 0.5*f*fx*cos(q1 + q2 + q3 - 1.0*theta) + 0.5*f*fx*cos(q2 - 1.0*q1 + q3 + theta) + 1.28e-12*f*fy*cos(q1 + q2 + q3 - 1.0*theta) - 1.28e-12*f*fy*cos(q2 - 1.0*q1 + q3 + theta) - 1.28e-12*f*fx*sin(q1 + q2 + q3 - 1.0*theta) - 1.28e-12*f*fx*sin(q2 - 1.0*q1 + q3 + theta) + 0.5*f*fy*sin(q1 + q2 + q3 - 1.0*theta) - 0.5*f*fy*sin(q2 - 1.0*q1 + q3 + theta) - 2.56e-12*f*fz*cos(q2 + q3) - 1.0*f*fz*sin(q2 + q3) + 0.5*e*fx*cos(q1 + q2 - 1.0*theta) + 0.5*e*fx*cos(q2 - 1.0*q1 + theta) + 1.28e-12*e*fy*cos(q1 + q2 - 1.0*theta) - 1.28e-12*e*fy*cos(q2 - 1.0*q1 + theta) - 1.28e-12*e*fx*sin(q1 + q2 - 1.0*theta) - 1.28e-12*e*fx*sin(q2 - 1.0*q1 + theta) + 0.5*e*fy*sin(q1 + q2 - 1.0*theta) - 0.5*e*fy*sin(q2 - 1.0*q1 + theta) - 2.56e-12*e*fz*cos(q2)], [6.12e-17*mz + my*cos(q1 - 1.0*theta) - 1.0*mx*sin(q1 - 1.0*theta) + 0.5*fy*g*cos(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) - 0.5*fy*g*cos(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) + 0.5*fy*h*cos(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) - 0.5*fy*h*cos(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) - 0.5*fx*g*sin(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) - 0.5*fx*g*sin(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) - 0.5*fx*h*sin(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) - 0.5*fx*h*sin(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) - 2.56e-12*fz*g*cos(q2 + q3 + q4) - 2.56e-12*fz*h*cos(q2 + q3 + q4) - 1.0*fz*g*sin(q2 + q3 + q4) - 1.0*fz*h*sin(q2 + q3 + q4) + 0.5*f*fx*cos(q1 + q2 + q3 - 1.0*theta) + 0.5*f*fx*cos(q2 - 1.0*q1 + q3 + theta) + 1.28e-12*f*fy*cos(q1 + q2 + q3 - 1.0*theta) - 1.28e-12*f*fy*cos(q2 - 1.0*q1 + q3 + theta) - 1.28e-12*f*fx*sin(q1 + q2 + q3 - 1.0*theta) - 1.28e-12*f*fx*sin(q2 - 1.0*q1 + q3 + theta) + 0.5*f*fy*sin(q1 + q2 + q3 - 1.0*theta) - 0.5*f*fy*sin(q2 - 1.0*q1 + q3 + theta) - 2.56e-12*f*fz*cos(q2 + q3) - 1.0*f*fz*sin(q2 + q3)], [6.12e-17*mz + my*cos(q1 - 1.0*theta) - 1.0*mx*sin(q1 - 1.0*theta) - 1.0*fz*cos(q2 + q3 + q4 - 1.57)*(g + h) + 1.0e-33*fy*(g + h)*(5.0e32*cos(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) - 5.0e32*cos(q2 - 1.0*q1 + q3 + q4 + theta - 1.57)) - 1.0e-33*fx*(5.0e32*sin(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) + 5.0e32*sin(q2 - 1.0*q1 + q3 + q4 + theta - 1.57))*(g + h)], [mx*(0.5*cos(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) - 6.12e-17*sin(q1 - 1.0*theta) + 0.5*cos(q2 - 1.0*q1 + q3 + q4 + theta - 1.57)) - 1.0*mz*(1.0*sin(q2 + q3 + q4 - 1.57) - 3.75e-33) + my*(0.5*sin(q1 + q2 + q3 + q4 - 1.0*theta - 1.57) - 0.5*sin(q2 - 1.0*q1 + q3 + q4 + theta - 1.57) + 6.12e-17*cos(q1 - 1.0*theta))]])
 
 	return combined_J, vel_kin_combined, combined_Torque
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
