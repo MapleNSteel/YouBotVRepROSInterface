@@ -199,7 +199,7 @@ def main():
 		getVehicleState()
 
 		elapsedTime+=deltaTime
-		ret=vrep.simxSetObjectPosition(clientID, sphere_handle, body_handle, (0.1,0.5,0.6),vrep.simx_opmode_blocking)
+		ret=vrep.simxSetObjectPosition(clientID, sphere_handle, body_handle, (0.0,0.0,0.2), vrep.simx_opmode_blocking)
 		vrep.simxSynchronousTrigger(clientID)
 if __name__=="__main__":
 	main()
