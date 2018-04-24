@@ -1,13 +1,13 @@
 import numpy as np
 
-a = 10   #not too sure about this 
-b = 72
-c = 150.5
-d = 75
-e = 155
-f = 135
-g = 113
-h = 105
+a = 10/1000.   #not too sure about this 
+b = 72/1000.
+c = 150.5/1000.
+d = 75/1000.
+e = 155/1000.
+f = 135/1000.
+g = 113/1000.
+h = 105/1000.
 
 
 def manipulator_kinematics(q1, q2, q3, q4, q5, q1d, q2d, q3d, q4d, q5d, q6d, fx, fy, fz, mx, my, mz, theta):

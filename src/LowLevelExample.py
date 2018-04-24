@@ -49,8 +49,8 @@ def main():
 
 	r = rospy.Rate(100)
 	while(running):
-		pubJoints.publish(np.array([0,0,0,0,0]))
-		pubWheel.publish(np.array([1,0,0.2]))
+		pubJoints.publish(np.array([0,0,pi/2,0,0]))
+		pubWheel.publish(np.array([0,0,0,0]))
 		r.sleep()
 if __name__=="__main__":
 	main()

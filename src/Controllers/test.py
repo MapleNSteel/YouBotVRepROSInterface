@@ -52,7 +52,7 @@ def main():
 
 	r = rospy.Rate(100)
 	while(running):
-		pubTarget.publish(np.array([1,1,pi/3]))
+		pubTarget.publish(np.array([0,0,pi]))
 		r.sleep()
 		
 if __name__=="__main__":

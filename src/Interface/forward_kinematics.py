@@ -1,28 +1,24 @@
-
-from sympy import *
 import numpy as np
+from numpy import sin, cos, pi
 
-
-
-
-a = 10   #not too sure about this 
-b = 72
-c = 150.5
-d = 75
-e = 155
-f = 135
-g = 113
-h = 105
+a = 33/1000   #not too sure about this 
+b = 140/1000
+c = 150.5/1000
+d = 147/1000
+e = 155/1000
+f = 135/1000
+g = 112.5/1000
+h = 105/1000
 
 
 def forward_kinematics(q1, q2, q3, q4, q5, x, y, theta):
 
 	global a, b, c, d, e, f, g, h
 
-	t = [0, np.deg2rad(q1), np.deg2rad(q2 - 90), np.deg2rad(q3), np.deg2rad(q4), np.deg2rad(90), 0, np.deg2rad(q5)]
+	t = [0, (q1), (q2 - pi/2), (q3), (q4), (pi/2), 0, (q5)]
 	dr = [b, d, 0, 0, 0, 0, 0, h]
 	ar = [-c, a, e, f, g, 0, 0, 0]
-	alpha = [0, np.deg2rad(-90), 0, 0, 0, 0, np.deg2rad(90), 0]
+	alpha = [0, (-pi/2), 0, 0, 0, 0, (pi/2), 0]
 
 
 	Rotz = np.matrix([[cos(t[0]), -sin(t[0]), 0, 0], [sin(t[0]), cos(t[0]), 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
@@ -81,7 +77,7 @@ def forward_kinematics(q1, q2, q3, q4, q5, x, y, theta):
 	T4T = Rotz * Transz * Transx * Rotx
 
 
-	TWR = np.matrix([[cos(np.deg2rad(theta)), sin(np.deg2rad(theta)), 0, x], [-sin(np.deg2rad(theta)), cos(np.deg2rad(theta)), 0, y], [0, 0, 1, 0], [0, 0, 0, 1]])
+	TWR = np.matrix([[cos((theta)), sin((theta)), 0, x], [-sin((theta)), cos((theta)), 0, y], [0, 0, 1, 0], [0, 0, 0, 1]])
 
 	TR1 = TR0 * T01
 	TR2 = TR0 * T01 * T12
@@ -89,10 +85,13 @@ def forward_kinematics(q1, q2, q3, q4, q5, x, y, theta):
 	TR4 = TR0 * T01 * T12 * T23 * T3D1 * TD1D2 * TD24
 	TRT = TR0 * T01 * T12 * T23 * T3D1 * TD1D2 * TD24 * T4T
 	TWT = TWR * TRT
-	tipPos_robot = TRT[0:3, 3]
+	tipPos_robot = TRT
 	tipPos_world = TWT[0:3, 3]
 
 	return tipPos_world
 
+def main():
+	print(forward_kinematics(0.0, 0, 90, 0, 0.0, 0, 0, 0))   #simple test example, should output: [-140.5, 0, 655]
 
-print(forward_kinematics(0, 0, 0, 0, 0, 0, 0, 0))   #simple test example, should output: [-140.5, 0, 655]
+if __name__=="__main__":
+	main()

@@ -20,7 +20,7 @@ from nav_msgs.msg import Odometry
 from mobile_kinematics import *
 
 running=True
-deltaTime = 50./1000
+deltaTime = 10./1000
 elapsedTime=0
 
 #State-Variables
@@ -191,12 +191,10 @@ def main():
 		initialisePose()
 		print ('Connected to remote API server')
 
-	r = rospy.Rate(100)
 	while(running and not(vrep.simxGetConnectionId(clientID)==-1)):
 		getVehicleState()		
 
 		elapsedTime+=deltaTime
 		vrep.simxSynchronousTrigger(clientID)
-		#r.sleep()
 if __name__=="__main__":
 	main()
