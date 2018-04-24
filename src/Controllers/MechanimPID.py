@@ -30,6 +30,8 @@ accumRot=0
 currentPose=np.array([0,0,0])
 target=np.array([1,0,1])
 
+ready=False
+
 r=0.02375*2
 
 def exit_gracefully(signum, frame):
@@ -55,9 +57,11 @@ def exit_gracefully(signum, frame):
 	# restore the exit gracefully handler here	
 	signal.signal(signal.SIGINT, exit_gracefully)
 def targetCallback(msg):
-	global target, reached, currentPose
+	global target, ready, currentPose
 	
 	target=msg.array
+
+	ready=True
 
 def odomCallback(odom):
 
@@ -80,7 +84,10 @@ def odomCallback(odom):
 
 def controlWheels():
 
-	global target, currentPose, reached, pubWheel,  previousForwBackVel, previousLeftRightVel, previousRotVel
+	global target, currentPose, reached, pubWheel,  previousForwBackVel, previousLeftRightVel, previousRotVel, ready
+
+	if(not ready):
+		return
 
 	relativePose=target-currentPose
 
@@ -97,6 +104,8 @@ def controlWheels():
 
 	if(np.linalg.norm(relativePose)<5e-2):
 		pubWheel.publish(np.array([0,0,0,0]))
+		ready=False
+
 		return
 	
 	forwBackVel=relativePose[0]*KpP

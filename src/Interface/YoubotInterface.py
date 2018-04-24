@@ -166,17 +166,23 @@ def initialisePose():
 
 def jointCallback(msg):
 
-		joints=msg.array
-	
-		setArmJointAngles(np.array([joints[0],joints[1],joints[2],joints[3],joints[4]]),np.array([0,-1]))
+	joints=msg.array
+
+	setArmJointAngles(np.array([joints[0],joints[1],joints[2],joints[3],joints[4]]),np.array([0,-1]))
 
 def wheelCallback(msg):
 
-		array=-np.array(msg.array)
+	array=-np.array(msg.array)
 
-		wheelVelocities=array
-	
-		setWheelVelocities(np.array([wheelVelocities[0],wheelVelocities[1],wheelVelocities[2],wheelVelocities[3]]))
+	wheelVelocities=array
+
+	setWheelVelocities(np.array([wheelVelocities[0],wheelVelocities[1],wheelVelocities[2],wheelVelocities[3]]))
+
+def IKCallback(msg):
+
+	array=-np.array(msg.array)
+
+	ret=vrep.simxSetObjectPosition(clientID, sphere_handle, body_handle, array, vrep.simx_opmode_blocking)
 
 def main():
 
@@ -185,6 +191,7 @@ def main():
 	rospy.init_node('YoubotInterface')
 	rospy.Subscriber('/Youbot/SetJointStates', Floats, jointCallback)
 	rospy.Subscriber('/Youbot/SetWheelVelocities', Floats, wheelCallback)
+	rospy.Subscriber('/YouBot/SetTipPosition', Floats, IKCallback)
 	pubOdom = rospy.Publisher('/Youbot/Odom', Odometry, queue_size=1)
 
 	signal.signal(signal.SIGINT, exit_gracefully)
@@ -199,7 +206,7 @@ def main():
 		getVehicleState()
 
 		elapsedTime+=deltaTime
-		ret=vrep.simxSetObjectPosition(clientID, sphere_handle, body_handle, (0.0,0.0,0.2), vrep.simx_opmode_blocking)
+		
 		vrep.simxSynchronousTrigger(clientID)
 if __name__=="__main__":
 	main()
