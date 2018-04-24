@@ -26,10 +26,11 @@ elapsedTime=0
 #State-Variables
 odom=Odometry()
 
-body_name='youBot'
+body_name='youBot_ref'
 arm_joint = ['youBotArmJoint0','youBotArmJoint1','youBotArmJoint2','youBotArmJoint3','youBotArmJoint4']
 gripper_joint = ['youBotGripperJoint1','youBotGripperJoint2']
 mobile_joint = ['rollingJoint_rl','rollingJoint_rr','rollingJoint_fl','rollingJoint_fr']
+spherical_target = 'youBot_positionTarget'
 
 def exit_gracefully(signum, frame):
 
@@ -61,7 +62,7 @@ def openPort():
 	# Connect to the V-REP continuous server
 	clientID = vrep.simxStart('127.0.0.1', 19997, True, True, 500, 5)
 def startSim():
-	global clientID, arm_joint, mobile_joint, joint_handles, gripper_handles, throttle_handles, body_handle
+	global clientID, arm_joint, mobile_joint, joint_handles, gripper_handles, throttle_handles, body_handle, sphere_handle
 
 	vrep.simxSetFloatingParameter(clientID,
 	        vrep.sim_floatparam_simulation_time_step,
@@ -84,7 +85,10 @@ def startSim():
 	    name, vrep.simx_opmode_blocking)[1] for name in mobile_joint]
 	
 	body_handle = vrep.simxGetObjectHandle(clientID,
-	    body_name, vrep.simx_opmode_blocking)
+	    body_name, vrep.simx_opmode_blocking)[1]
+
+	sphere_handle = vrep.simxGetObjectHandle(clientID,
+	    spherical_target, vrep.simx_opmode_blocking)[1]
 
 def setArmJointAngles(armJointAngles,gripperStates):
 	
@@ -113,9 +117,9 @@ def getVehicleState():
 
 	global clientID, arm_joint, mobile_joint, joint_handles, gripper_handles, throttle_handles, body_handle, pubOdom, Pose, EKF, elapsedTime
 
-	ret, xyz=vrep.simxGetObjectPosition(clientID, body_handle[1], -1, vrep.simx_opmode_blocking)
-	Vxyz=vrep.simxGetObjectVelocity(clientID, body_handle[1], vrep.simx_opmode_blocking)
-	ret, rot=vrep.simxGetObjectOrientation(clientID, body_handle[1], -1, vrep.simx_opmode_blocking)
+	ret, xyz=vrep.simxGetObjectPosition(clientID, body_handle, -1, vrep.simx_opmode_blocking)
+	Vxyz=vrep.simxGetObjectVelocity(clientID, body_handle, vrep.simx_opmode_blocking)
+	ret, rot=vrep.simxGetObjectOrientation(clientID, body_handle, -1, vrep.simx_opmode_blocking)
 	
 	position=np.array(xyz)
 	orientation=np.array(transforms3d.euler.euler2quat(rot[0],rot[1],rot[2]))
@@ -153,11 +157,11 @@ def getVehicleState():
 def initialisePose():
 	global clientID, joint_names, throttle_joint, joint_handles, gripper_handles, throttle_handles, body_handle, Pose
 
-	ret, xyz=vrep.simxGetObjectPosition(clientID, body_handle[1], -1, vrep.simx_opmode_blocking)
-	ret, rot=vrep.simxGetObjectOrientation(clientID, body_handle[1], -1, vrep.simx_opmode_blocking)
+	ret, xyz=vrep.simxGetObjectPosition(clientID, body_handle, -1, vrep.simx_opmode_blocking)
+	ret, rot=vrep.simxGetObjectOrientation(clientID, body_handle, -1, vrep.simx_opmode_blocking)
 	Pose=np.array([xyz[0],xyz[1],rot[1]])
 
-	setArmJointAngles(np.array([0,0,0,0,0]),np.array([-1,-1]))
+	#setArmJointAngles(np.array([0,0,0,0,0]),np.array([-1,-1]))
 	setWheelVelocities(np.array([0,0,0,0]))
 
 def jointCallback(msg):
@@ -176,7 +180,7 @@ def wheelCallback(msg):
 
 def main():
 
-	global clientID, joint_names, throttle_joint, joint_handles, throttle_handles, body_handle, pubOdom, Pose, EKF, elapsedTime
+	global clientID, joint_names, throttle_joint, joint_handles, throttle_handles, body_handle, pubOdom, Pose, EKF, elapsedTime, sphere_handle
 	
 	rospy.init_node('YoubotInterface')
 	rospy.Subscriber('/Youbot/SetJointStates', Floats, jointCallback)
@@ -192,9 +196,10 @@ def main():
 		print ('Connected to remote API server')
 
 	while(running and not(vrep.simxGetConnectionId(clientID)==-1)):
-		getVehicleState()		
+		getVehicleState()
 
 		elapsedTime+=deltaTime
+		ret=vrep.simxSetObjectPosition(clientID, sphere_handle, body_handle, (0.1,0.5,0.6),vrep.simx_opmode_blocking)
 		vrep.simxSynchronousTrigger(clientID)
 if __name__=="__main__":
 	main()

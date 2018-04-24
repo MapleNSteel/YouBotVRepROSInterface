@@ -91,7 +91,7 @@ def forward_kinematics(q1, q2, q3, q4, q5, x, y, theta):
 	return tipPos_world
 
 def main():
-	print(forward_kinematics(0.0, 0, 90, 0, 0.0, 0, 0, 0))   #simple test example, should output: [-140.5, 0, 655]
+	print(forward_kinematics(0, 0, 90, 0, 0, 0, 0, 0))   #simple test example, should output: [-140.5, 0, 655]
 
 if __name__=="__main__":
 	main()
